@@ -1,26 +1,23 @@
-NAME = inception
-DC = docker-compose -f srcs/docker-compose.yml
-DATA_PATH = /home/$(USER)/data
+all: build
 
-all: permissions $(NAME)
+build:
+	mkdir -p /home/$(USER)/data/wordpress
+	mkdir -p /home/$(USER)/data/mariadb
+	sudo chown -R $(USER):$(USER) /home/$(USER)/data/wordpress
+	sudo chown -R $(USER):$(USER) /home/$(USER)/data/mariadb
+	docker-compose -f srcs/docker-compose.yml up --build -d
 
-permissions:
-	@echo "Creating necessary directories..."
-	@sudo mkdir -p $(DATA_PATH)/wordpress
-	@sudo mkdir -p $(DATA_PATH)/mariadb
-	@sudo chown -R $(USER):$(USER) $(DATA_PATH)
+down:
+	docker-compose -f srcs/docker-compose.yml down
 
-$(NAME):
-	$(DC) up --build -d
-
-clean:
-	$(DC) down
+clean: down
+	docker system prune -a
 
 fclean: clean
-	docker system prune -af
-	sudo rm -rf $(DATA_PATH)
+	sudo rm -rf /home/$(USER)/data/wordpress
+	sudo rm -rf /home/$(USER)/data/mariadb
+	docker volume prune -f
 
 re: fclean all
 
-.PHONY: all clean fclean re permissions $(NAME)
-
+.PHONY: all setup build down clean re

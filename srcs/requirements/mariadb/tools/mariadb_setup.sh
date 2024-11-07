@@ -1,6 +1,12 @@
 #!/bin/bash
 # Start the mysql service
 service mariadb start
+
+MYSQL_DATABASE_NAME="${MYSQL_DATABASE}"
+MYSQL_USER="${MYSQL_USER}"
+MYSQL_PASSWORD="${MYSQL_PASSWORD}"
+
+
 # Set the root password for mysql
 mysql_secure_installation << EOF
 n
@@ -22,4 +28,4 @@ mysql -u root -p$MYSQL_ROOT_PASSWORD -e "FLUSH PRIVILEGES;"
 # exit from mysql
 mysqladmin -u root -p$MYSQL_ROOT_PASSWORD shutdown
 # start mysql in the background to keep the container running
-mysql_safe --port=3306 --bind-address=0.0.0.0 --socket=/run/mysqld/mysqld.sock
+mysqld_safe --port=3306 --bind-address=0.0.0.0 --socket=/run/mysqld/mysqld.sock
