@@ -5,10 +5,7 @@
 #     echo "WordPress is already installed."
 #     exit 0
 # fi
-# # Ensure the /run/php directory exists
-# if [ ! -d /run/php ]; then
-#     mkdir -p /run/php
-# fi
+
 echo "MYSQL_DATABASE: $MYSQL_DATABASE"
 echo "MYSQL_USER: $MYSQL_USER"
 echo "MYSQL_PASSWORD: $MYSQL_PASSWORD"
@@ -23,19 +20,9 @@ chmod -R 755 /var/www/html
 
 service php7.4-fpm start
 
-if [ ! -f /var/www/html/wp-config.php ]; then
+sleep 10
 
-echo "WordPress not found. Downloading WordPress..."
-
-wp core download --path=/var/www/html/ --allow-root
-
-  
-
-# Configure wp-config.php with database credentials
-
-wp core config --dbhost=mariadb:3306 --dbname="$MYSQL_DATABASE" --dbuser="$MYSQL_USER" --dbpass="$MYSQL_PASSWORD" --allow-root
-
-fi
+wp config create --dbname=$MYSQL_DATABASE --dbuser=$MYSQL_USER --dbpass=$MYSQL_PASSWORD --dbhost=mariadb --allow-root
 
 wp core install --url=$WP_URL --title=$WP_TITLE --admin_user=$WP_USER_ADMIN --admin_password=$MYSQL_ROOT_PASSWORD --admin_email=$WP_EMAIL_ADMIN --path=/var/www/html --allow-root
 wp user create $MYSQL_USER $WP_EMAIL --role=author --user_pass=$WP_PASSWORD --path=/var/www/html --allow-root

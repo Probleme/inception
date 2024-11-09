@@ -2,10 +2,7 @@
 # Start the mysql service
 service mariadb start
 
-MYSQL_DATABASE_NAME="${MYSQL_DATABASE}"
-MYSQL_USER="${MYSQL_USER}"
-MYSQL_PASSWORD="${MYSQL_PASSWORD}"
-
+sleep 5
 
 # Set the root password for mysql
 mysql_secure_installation << EOF
