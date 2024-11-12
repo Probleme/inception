@@ -30,4 +30,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all setup build down clean re
+.PHONY: all build down clean re
