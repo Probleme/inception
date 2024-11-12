@@ -1,31 +1,84 @@
+# How docker and docker compose work ?
+**Docker** works by :
+- Creating isolated containers using the host OS kernel.
+- Running applications in these containers with either dependencies.
+- Managing container lifecycle(create, start, stop, delete).
+**Docker compose** works by :
+- Reading a configuration file(docker-compose.yml).
+- Managing multiple containers as a single application.
+- Handling networking and dependencies automatically.
+
+# Differences in image usage :
+**Without Docker Compose** :
+- Manual container Management.
+- Individual commands for each operation.
+**With docker compose** :
+- Declarative configuration.
+- Automated container orchestration.
+
+# Benefits of Docker vs VMs :
+**Docker** :
+- Lighter weight (shares host OS kernel).
+- Faster startup times (seconds).
+- Less ressource intensive.
+- Better ressource intensive.
+- Better ressource utilization.
+- Easier to version and share.
+- Consistent developmennt environments.
+**VMs** :
+- Complete OS isolation.
+- Higher ressource usage.
+- Longer startup times(minutes).
+- More overhead.
+- Harder to version and share.
+
+
 # What is Docker and Containers ?
-**Docker** is an open source platform that allows developers to automate the deoplyement and management of applications within lightweight isolated containers.
-**Containers** are lightweight form of virtualization that package an application and its dependencies into a standarized unit, ensure that the application runs consistently across different computing environments.
+- **Docker** is an open source platform that allows developers to automate the deoplyement and management of applications within lightweight isolated containers.
+- **Containers** are lightweight form of virtualization that package an application and its dependencies into a standarized unit, ensure that the application runs consistently across different computing environments.
 
 # Key Concepts in Docker :
-**Images** : A Docker image is a lightweight, standalone, and executable software package that includes everything needed to run a piece of software, including code, runtime, libraries, and dependencies. Images are like blueprints for containers.
-**Containers** : A container is an instance of a Docker image running as an isolated process on a host machine. Containers are portable, consistent environments, so they work the same across various systems.
-**Dockerfile** : A dockerfile is a script containing instruntions to create Docker image. It defines what goes into the image and how it's configured.
-**Docker Engine** : This is the core of docker, responsible for managing containers, images, networking, and storage.
+- **Images** : A Docker image is a lightweight, standalone, and executable software package that includes everything needed to run a piece of software, including code, runtime, libraries, and dependencies. Images are like blueprints for containers.
+- **Containers** : A container is an instance of a Docker image running as an isolated process on a host machine. Containers are portable, consistent environments, so they work the same across various systems.
+- **Dockerfile** : A dockerfile is a script containing instruntions to create Docker image. It defines what goes into the image and how it's configured.
+- **Docker Engine** : This is the core of docker, responsible for managing containers, images, networking, and storage.
 
 # how docker work ?
-**1-Build** : You write a Dockerfile with necessary instructions, and **Docker** uses it to create an image.
-**2-Run** : With the image built, you can start a container from it. Each container is isolated but can interact with other containers or external systems as configured.
-**3-Deploy** : Containers can be deploy to any system running **Docker**, making applications highly portable and reproducible.
+- **1-Build** : You write a Dockerfile with necessary instructions, and **Docker** uses it to create an image.
+- **2-Run** : With the image built, you can start a container from it. Each container is isolated but can interact with other containers or external systems as configured.
+- **3-Deploy** : Containers can be deploy to any system running **Docker**, making applications highly portable and reproducible.
 
 # Docker Compose ?
 **docker compose** is a tool for defining and running multi-container **Docker** applications. It allows you to specify multiple containers in a single **YAML** file, making it easy to manage and coordinate services that make up an application.
 
+# How docker compose work ?
+## 1- Service definition :
+- Each service becomes a container.
+- Build points to directory with Dockerfile.
+- Services can be configured independently.
+## 2- Dependencies :
+- Specifies service start order.
+- MariaDB starts before wordpress.
+## 3- Networking :
+- Services in same network can communicate.
+- Automatic DNS resolution between services.
+## 4- Volume Management :
+- Persistent data storage.
+- Shared data between containers.
+## 5- Environment Variables :
+- Configure services via environment variables.
+- Keep sensitive data separate.
+
 # Key concepts in Docker Compose :
-**Services** : Each component (e.g., web server, databse) is defined as a service in the docker-compose.yml file. Each service corresponds to a Docker container.
-**Networks** : Docker Compose allows you to define custom networks for services to communicate securely and efficiently.
-**Volumes** : You can also define shared storage between containers using volumes, wich make data persistence and sharing easy.
+- **Services** : Each component (e.g., web server, databse) is defined as a service in the docker-compose.yml file. Each service corresponds to a Docker container.
+- **Networks** : Docker Compose allows you to define custom networks for services to communicate securely and efficiently.
+- **Volumes** : You can also define shared storage between containers using volumes, wich make data persistence and sharing easy.
 
 # What are containers ?
-**Containers** are completely isolated environments. As in they can have  their own processes or services, their own network interfaces, their own mounts, just like washing machines, except they all share the same OS kernel.
+- **Containers** are completely isolated environments. As in they can have  their own processes or services, their own network interfaces, their own mounts, just like washing machines, except they all share the same OS kernel.
 It's also important to note that containers are not new with **Docker**.
-**Containers** have existed for about 15 years now and some of the different types of containers are Aleksey LSD, like CFS, etc.
-**Docker** utilizes Aleksey containers. Setting up these container environments is hard as they are very low-level and that is where docker offers a high-level two, with serveral powerful functionnalities making it really easy for end users like us.
+- **Containers** have existed for about 15 years now and some of the different types of containers are Aleksey LSD, like CFS, etc.
+- **Docker** utilizes Aleksey containers. Setting up these container environments is hard as they are very low-level and that is where docker offers a high-level two, with serveral powerful functionnalities making it really easy for end users like us.
 
 ## We said earlier that docker containers share  the underlying kernel. So what does actually mean, Sharing the kernel ?
 Let's say we have a system with an **Ubuntu** OS with **Docker** installed on it.
