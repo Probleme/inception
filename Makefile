@@ -25,7 +25,6 @@ clean: down
 
 fclean: clean
 	sudo rm -rf /home/$(USER)/data
-	docker volume prune -f
 
 re: fclean all
 
