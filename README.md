@@ -22,10 +22,10 @@
 - More overhead.
 - Harder to version and share.
 
-
 # What is Docker and Containers ?
 - **Docker** is an open source platform that allows developers to automate the deoplyement and management of applications within lightweight isolated containers.
 - **Containers** are lightweight form of virtualization that package an application and its dependencies into a standarized unit, ensure that the application runs consistently across different computing environments.
+- **Containers** share the host OS kernel but run in isolated environments.
 
 # Key Concepts in Docker :
 - **Images** : A Docker image is a lightweight, standalone, and executable software package that includes everything needed to run a piece of software, including code, runtime, libraries, and dependencies. Images are like blueprints for containers.
