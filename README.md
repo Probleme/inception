@@ -41,10 +41,10 @@
 # Docker Compose ?
 **docker compose** is a tool for defining and running multi-container Docker applications. It allows you to specify multiple containers in a single **YAML** file, making it easy to manage and coordinate services that make up an application.
 
-# Key concepts in docker compose :
-- **Services** : In docker compose, a service refers to a container that runs a part of your application(e.g., a database service, a web service). Each service is defined in the docker-compose.yml file.
-- **Volumes** : You can persist data by using Docker volumes, ensuring that data inside containers (like databases) isn't lost when the containers stops.
-- **Networks** : Docker Compose creates network for containers to communicate with each other. Containers in the same network can discover and talk to each other using names.
+# Key concepts in Docker Compose :
+- **Services** : Each component (e.g., web server, databse) is defined as a service in the docker-compose.yml file. Each service corresponds to a Docker container.
+- **Networks** : Docker Compose allows you to define custom networks for services to communicate securely and efficiently.
+- **Volumes** : You can also define shared storage between containers using volumes, wich make data persistence and sharing easy.
 
 # How Docker compose work ?
 - **Define services**: You write a docker-compose.yml file that specifies all the services required for your application, including the Docker images to use, ports to expose, volumes to mount, and networks to connect.
@@ -69,18 +69,56 @@
 - Configure services via environment variables.
 - Keep sensitive data separate.
 
-# Key concepts in Docker Compose :
-- **Services** : Each component (e.g., web server, databse) is defined as a service in the docker-compose.yml file. Each service corresponds to a Docker container.
-- **Networks** : Docker Compose allows you to define custom networks for services to communicate securely and efficiently.
-- **Volumes** : You can also define shared storage between containers using volumes, wich make data persistence and sharing easy.
+# The difference between a Docker image used with docker compose and without docker compose ?
+The primary difference between a Docker image used with Docker Compose and without Docker Compose is the way the image is managed and orchestrated, not the image itself. Docker Compose is a tool for running multi-container Docker applications, but the underlying images are the same in both cases.
+## Without Docker compose :
+When using Docker without Compose, you interact with Docker images and containers manually through the Docker CLI (docker command). You have to explicitly run each container individually and configure options like networks, ports, volumes, and environment variables using command-line flags.
+```bash
+docker run -d -p 3000:3000 --name frontend frontend-image
+docker run -d -p 5432:5432 --name db postgres
+docker network create my-network
+docker network connect my-network frontend
+docker network connect my-network db
+```
+## With Docker Compose :
+When using Docker Compose, you still use the same Docker images, but the management and orchestration of multiple containers are done automatically based on the configuration defined in a docker-compose.yml file.
+```yaml
+services:
+    frontend:
+        image: frontend-image
+        ports:
+            - "3000:3000"
+        
+    db:
+        image: postgres
+        ports:
+            - "5432:5432"
+```
+## The main difference are :
+- Docker Compose automatically handles networking between containers.
+- Configuration is declarative and version-controlled.
+- Easier to manage multiple containers as a single application.
+- Simpler commands for starting/stopping the entire stack.
 
-## We said earlier that docker containers share  the underlying kernel. So what does actually mean, Sharing the kernel ?
-Let's say we have a system with an **Ubuntu** OS with **Docker** installed on it.
-**Docker** can run any flavor of OS on top of it, as long as they're all based on the same kernel. In this case **Linux**. If the underlying OS is **Ubuntu**, **Docker** can run a container based on another distribution like Debian, Fedora, Susi or Centos each docker container only has the additional software that we just talked about in the previous slide that makes these operating systems different. And **Docker** utilizes the underlying kernel of the Docker Host, wich works with all OSS above.
+# The benefit of Docker compared to VMs ?
+## Docker advantages :
+- Lighter weight (shares host OS kernel instead of running full OS).
+- Faster startup (seconds vs minutes).
+- Uses less ressources (MBs vs GBs).
+- Better ressource utilization on host.
+- Easier to version and distribute.
+- More portableacross environments.
+## VM advantages :
+- Fuller isolation (complete OS).
+- Can run different OS kernels.
+- Better security isolation.
+- More suitable for monolithic applications.
 
-# What is an OS does not share the same kernel?
-The OS that not share the kernel is **Windows**. And so we won't be able to run a **Windows** based Container on a Docker Host with linux on it. For that we will require docker on a Windows Server.
-When we install **Docker** on **Windows** and run a Linux container on Windows, we not really running a linux container on windows, **Windows** runs a linux container on a linux virtual machine under the hoods. So it's really a Linux container on on linux virtual machine on windows.
+# The pertinence of the directory structure required for this project?
+- **Modularity** : Each service has its own folder, making it easier to maintain and update without affecting other.
+- **Separation of concerns** : Files like Dockerfile, configuration files, and environment variables are organized logically, so different components like (web server, database, etc.) are managed in isolation.
+- **Scalability** : If you need to add new services in the future (e.g., Redis, or backup service), you can easily create a new folder under requirements.
+- **Automation** : The Makefile and Docker Compose file ensure the project can be started and managed with simple commands, making deployment smoother and faster.
 
-# Isn't that a disadvantage then not being able to run another kernel on the OS ?
-the answer is **No**. Because unlike hypervisors, Docker is not meant to virtualize and run different operating systems and kernels on the same hardware. The main purpose of Docker is to package and containerize applications and to ship them and to run them anywhere anytime, as many as we want. 
+This structure mirrors best practice in containerized environments, ensuring that your project is clean, organized, and easy to scale or maintain.
+
