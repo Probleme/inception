@@ -41,6 +41,16 @@
 # Docker Compose ?
 **docker compose** is a tool for defining and running multi-container Docker applications. It allows you to specify multiple containers in a single **YAML** file, making it easy to manage and coordinate services that make up an application.
 
+# Key concepts in docker compose :
+- **Services** : In docker compose, a service refers to a container that runs a part of your application(e.g., a database service, a web service). Each service is defined in the docker-compose.yml file.
+- **Volumes** : You can persist data by using Docker volumes, ensuring that data inside containers (like databases) isn't lost when the containers stops.
+- **Networks** : Docker Compose creates network for containers to communicate with each other. Containers in the same network can discover and talk to each other using names.
+
+# How Docker compose work ?
+- **Define services**: You write a docker-compose.yml file that specifies all the services required for your application, including the Docker images to use, ports to expose, volumes to mount, and networks to connect.
+- **Bring up Services** : You run docker-compose up, and Docker compose will start all the services defined in the **YAML** file. Each service will run as a separate container.
+- **Manage Services**: You can use docker-compose down to stop and remove containers, networks, and volumescreated by docker-compose up. Other commands like docker-compose stop, docker-compose restart, and docker-compose logs help to manage the running services.
+
 # How docker compose work ?
 ## 1- Service definition :
 - Each service becomes a container.
