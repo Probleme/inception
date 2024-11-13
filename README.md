@@ -44,7 +44,7 @@
 # Key concepts in Docker Compose :
 - **Services** : Each component (e.g., web server, databse) is defined as a service in the docker-compose.yml file. Each service corresponds to a Docker container.
 - **Networks** : Docker Compose allows you to define custom networks for services to communicate securely and efficiently.
-- **Volumes** : You can also define shared storage between containers using volumes, wich make data persistence and sharing easy.
+- **Volumes** :  Docker Volumes is a way to store and share data between Docker containers or between the container and the host system
 
 # How Docker compose work ?
 - **Define services**: You write a docker-compose.yml file that specifies all the services required for your application, including the Docker images to use, ports to expose, volumes to mount, and networks to connect.
