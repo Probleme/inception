@@ -157,8 +157,8 @@ server {
 ### server {...} :
 - This defines a server block, wich handles a specific set of requests for the server. Everything inside the curly braces {...} configures how NGINX should handle these requests.
 ### listen 443 ssl :
-- **listen 443** : Instructs NGINX to listen on port 443, wich is the default port for HTTPS.
-- **ssl** : Indicates that SSL/TLS should be used for secure connections on this port.
+- **listen 443** : Configures the server to listen for HTTPS traffic on port 443.
+- **ssl** : The ssl directive enables SSL/TLS for this server block.
 ### server_name :
 - Defines the domain names this server block will respond to. here  it will handle requesrs for ataouaf.42.fr and localhost and wwww.ataouaf.42.fr.
 ### root :
