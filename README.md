@@ -145,11 +145,13 @@ COPY ./conf/nginx.conf /etc/nginx/sites-enabled/default
 - **Install nginx and openssl** : Update the package list and installs NGINX(web server) and OpenSSL for generating SSL certificates.
 ### RUN openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes :
 - **Generate SSL Certificate** : This command generates a self-signed certificate
-    - `-newkey rsa:4096` : Create a new RSA key with a 4096-bit size.
-    - `-x509` : create a self signed certificate.
-    - `-sha256` : 
+
+    - `-req` : Generates a certificate signing request (CSR).
+    - `-newkey rsa:4096` : Creates a new private key with a 4096-bit RSA encryption.
+    - `-x509` : Directly outputs a self-signed certificate instead of a CSR. The -x509 option is required for creating self-signed certificates.
+    - `-sha256` : Uses the SHA-256 hashing algorithm for signing the certificate.
     - `-days 365` : The certificate is valid for 365 days.
-    -  `-out` : the certificate is saved at this location.
+    - `-out` : the certificate is saved at this location.
     - `-keyout` : The private key is saved at this location.
     - `-subj` : Define the certificate subject, including country(C), state(ST), location(L),     organization(O), and common name(CN) for the domain.
 ### COPY ./conf/nginx.conf /etc/nginx/sites-enabled/default :
