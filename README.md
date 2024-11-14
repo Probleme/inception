@@ -30,7 +30,7 @@
 # Key Concepts in Docker :
 - **Images** : A Docker image is a lightweight, standalone, and executable software package that includes everything needed to run a piece of software, including code, runtime, libraries, and dependencies. Images are like blueprints for containers.
 - **Containers** : A container is an instance of a Docker image running as an isolated process on a host machine. Containers are portable, consistent environments, so they work the same across various systems.
-- **Dockerfile** : A dockerfile is a script containing instruntions to create Docker image. It defines what goes into the image and how it's configured.
+- **Dockerfile** : A dockerfile is a script containing instruntions to create Docker image. Each instruntion written in dockerfile create a layer,Layers are cached for faster builds, fewer layers = more efficient image. 
 - **Docker Engine** : This is the core of docker, responsible for managing containers, images, networking, and storage.
 
 # how docker work ?
@@ -122,3 +122,107 @@ services:
 
 This structure mirrors best practice in containerized environments, ensuring that your project is clean, organized, and easy to scale or maintain.
 
+# nginx :
+Nginx (pronounced "Engine X") is a open-source web server software used for reverse proxy server, load balancer, and HTTP cache.
+## Dockerfile :
+```Dockerfile
+FROM debian:bullseye
+
+RUN apt-get update && apt-get upgrade -y && apt-get install -y nginx openssl
+
+RUN mkdir -p /etc/nginx/ssl
+
+RUN openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes \
+       -out /etc/nginx/ssl/ataouaf.crt \
+       -keyout /etc/nginx/ssl/ataouaf.key \
+       -subj "/C=MA/ST=Morocco/L=Morocco/O=1337 School/OU=ataouaf/CN=ataouaf/"
+
+COPY ./conf/nginx.conf /etc/nginx/sites-enabled/default
+```
+### FROM debian:bullseye :
+- **Base Image** : The dockerfile starts by using Debian Bullseye as the base image, a minimal Debian distribution.
+###  RUN apt-get update && apt-get upgrade -y && apt-get install -y nginx openssl :
+- **Install nginx and openssl** : Update the package list and installs NGINX(web server) and OpenSSL for generating SSL certificates.
+### RUN openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes :
+- **Generate SSL Certificate** : This command generates a self-signed certificate
+    - `-newkey rsa:4096` : Create a new RSA key with a 4096-bit size.
+    - `-x509` : create a self signed certificate.
+    - `-sha256` : 
+    - `-days 365` : The certificate is valid for 365 days.
+    -  `-out` : the certificate is saved at this location.
+    - `-keyout` : The private key is saved at this location.
+    - `-subj` : Define the certificate subject, including country(C), state(ST), location(L),     organization(O), and common name(CN) for the domain.
+### COPY ./conf/nginx.conf /etc/nginx/sites-enabled/default :
+- Copies NGINX configuration file(nginx.conf) from ./conf directory into the container, replacing the default configuration in /etc/nginx/sites-enabled/default .
+### CMD ["nginx", "-g", "daemon off;"]
+- **Run nginx** : This sets the container to start NGINX in the foreground(daemon off) when it is run, ensuring the container doesn't exit immediatly after starting.
+
+## NGINX config file :
+```conf
+server {
+    listen 443 ssl;
+    server_name ataouaf.42.fr www.ataouaf.42.fr localhost;
+
+    root /var/www/html;
+    index index.php;
+
+    ssl_certificate /etc/nginx/ssl/ataouaf.crt;
+    ssl_certificate_key /etc/nginx/ssl/ataouaf.key;
+    ssl_protocols TLSv1.2 TLSv1.3;
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass wordpress:9000;
+    }
+}
+```
+### server {...} :
+- This defines a server block, wich handles a specific set of requests for the server. Everything inside the curly braces {...} configures how NGINX should handle these requests.
+### listen 443 ssl :
+- **listen 443** : Instructs NGINX to listen on port 443, wich is the default port for HTTPS.
+- **ssl** : Indicates that SSL/TLS should be used for secure connections on this port.
+### server_name :
+- Defines the domain names this server block will respond to. here  it will handle requesrs for ataouaf.42.fr and localhost and wwww.ataouaf.42.fr.
+### root :
+- **root** : Sets the root directory where NGINX will serve files from. In this case, it's set to /var/www/html, meaning this is where NGINX looks for static files like HTML, CSS, etc.
+### index index.php :
+- **index** : specifies the default file to serve if a directory is requested. Here, index.php will be served as the default file if available(i.e., NGINX will serve /var/www/htnl/index.php).
+### ssl_certificate :
+- this points to the location of SSL certificate file. In this case, it's a self-signed certificate located at /etc/nginx/ssl/ataouaf.cert.
+### ssl_certificate_key :
+Specifies the path to the private key that corresponds to the SSL certificaate. this key required for secure communication.
+### ssl protocols :
+- Specifies the SSL/TLS protocols that the server supports. int this case, only TLSv1.2 and TLSv1.3 are allowed, wich are more secure than older protocols.
+### location ~ \.php$ :
+- **location ~ \.php$** : this block matches any request for php files. The ~ indicates a regular expression is being used. This expression matches any file ending in .php.
+### fastcgi_pass wordpress:9000 :
+- **fastcgi_pass** : Defines where to pass PHP requests. Here, it forwards PHP requests to port 9000 on the container named wordpress, where php-fpm(FastCGI Process Manager) is running.
+
+# Mariadb :
+NariaDb is an open-source database management system that originated as a fork of MYSQL. It is designed to store, manage, and retrieve data efficiently and supports SQL(Structured Query Language) for database operations.
+## Setup and config of a mariadb :
+```bash
+#!/bin/bash
+
+service mariadb start
+
+sleep 5
+
+mysql_secure_installation << EOF
+n
+$MYSQL_ROOT_PASSWORD
+$MYSQL_ROOT_PASSWORD
+Y
+n
+n
+n
+n
+EOF
+mysql -e "CREATE DATABASE IF NOT EXISTS \`${MYSQL_DATABASE}\`;"
+mysql -e "CREATE USER IF NOT EXISTS \`${MYSQL_USER}\`@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';"
+mysql -e "GRANT ALL PRIVILEGES ON \`${MYSQL_DATABASE}\`.* TO \`${MYSQL_USER}\`@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';"
+mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';"
+mysql -u root -p$MYSQL_ROOT_PASSWORD -e "FLUSH PRIVILEGES;"
+mysqladmin -u root -p$MYSQL_ROOT_PASSWORD shutdown
+mysqld_safe --port=3306 --bind-address=0.0.0.0 --socket=/run/mysqld/mysqld.sock
+```

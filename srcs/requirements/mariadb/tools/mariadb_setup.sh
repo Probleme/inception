@@ -2,7 +2,7 @@
 
 service mariadb start
 
-sleep 5
+# sleep 5
 
 mysql_secure_installation << EOF
 n

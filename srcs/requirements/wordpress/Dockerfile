@@ -14,6 +14,4 @@ COPY ./tools/wordpress_setup.sh /tmp/wordpress_setup.sh
 
 RUN chmod +x /tmp/wordpress_setup.sh
 
-EXPOSE 9000
-
 ENTRYPOINT [ "sh", "/tmp/wordpress_setup.sh" ]

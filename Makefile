@@ -6,16 +6,16 @@
 #    By: ataouaf <ataouaf@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/11/08 13:04:06 by ataouaf           #+#    #+#              #
-#    Updated: 2024/11/13 11:43:25 by ataouaf          ###   ########.fr        #
+#    Updated: 2024/11/14 11:03:46 by ataouaf          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 all: up
 
-up:
+up: build
 	mkdir -p /home/$(USER)/data/wordpress
 	mkdir -p /home/$(USER)/data/mariadb
-	docker-compose -f srcs/docker-compose.yml up --build -d
+	docker-compose -f srcs/docker-compose.yml up -d
 
 build:
 	docker compose -f srcs/docker-compose.yml build
