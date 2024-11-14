@@ -176,6 +176,32 @@ Specifies the path to the private key that corresponds to the SSL certificaate. 
 ### fastcgi_pass wordpress:9000 :
 - **fastcgi_pass** : Defines where to pass PHP requests. Here, it forwards PHP requests to port 9000 on the container named wordpress, where php-fpm(FastCGI Process Manager) is running.
 
+# **FastCGI**:
+
+- FastCGI is a protocol that allows a web server (like Nginx or Apache) to communicate with applications that process web requests
+- It's an improvement over the older CGI (Common Gateway Interface) protocol
+- Instead of creating a new process for each request (like CGI did), FastCGI keeps processes running and reuses them for multiple requests
+- This makes handling web requests much faster and more efficient
+
+# **PHP-FPM (PHP FastCGI Process Manager)** :
+
+- PHP-FPM is a specific implementation of FastCGI for PHP
+- It's a process manager that handles PHP requests
+## Key features:
+- Manages pools of PHP worker processes
+- Can handle different PHP versions simultaneously
+- Provides better performance than traditional PHP handling
+- Offers advanced features like process monitoring and adaptive process spawning
+
+# The relationship between them:
+When a web request comes in for a PHP file:
+
+The web server (e.g., Nginx) receives the request
+It passes the request to PHP-FPM using the FastCGI protocol
+PHP-FPM processes the PHP code
+The result is sent back through FastCGI to the web server
+Finally, the web server sends the response to the user
+
 # Mariadb :
 NariaDb is an open-source database management system that originated as a fork of MYSQL. It is designed to store, manage, and retrieve data efficiently and supports SQL(Structured Query Language) for database operations.
 ## Setup and config of a mariadb :
