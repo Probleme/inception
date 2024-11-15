@@ -1,27 +1,3 @@
-# Differences in image usage :
-- **Without Docker Compose** :
-- Manual container Management.
-- Individual commands for each operation.
-- **With docker compose** :
-- Declarative configuration.
-- Automated container orchestration.
-
-# Benefits of Docker vs VMs :
-- **Docker** :
-- Lighter weight (shares host OS kernel).
-- Faster startup times (seconds).
-- Less ressource intensive.
-- Better ressource intensive.
-- Better ressource utilization.
-- Easier to version and share.
-- Consistent developmennt environments.
-- **VMs** :
-- Complete OS isolation.
-- Higher ressource usage.
-- Longer startup times(minutes).
-- More overhead.
-- Harder to version and share.
-
 # What is Docker and Containers ?
 - **Docker** is an open source platform that allows developers to automate the deoplyement and management of applications within lightweight isolated containers.
 - **Containers** are lightweight form of virtualization that package an application and its dependencies into a standarized unit, ensure that the application runs consistently across different computing environments.
@@ -145,11 +121,13 @@ COPY ./conf/nginx.conf /etc/nginx/sites-enabled/default
 - **Install nginx and openssl** : Update the package list and installs NGINX(web server) and OpenSSL for generating SSL certificates.
 ### RUN openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes :
 - **Generate SSL Certificate** : This command generates a self-signed certificate
-    - `-newkey rsa:4096` : Create a new RSA key with a 4096-bit size.
-    - `-x509` : create a self signed certificate.
-    - `-sha256` : 
+
+    - `-req` : Generates a certificate signing request (CSR).
+    - `-newkey rsa:4096` : Creates a new private key with a 4096-bit RSA encryption.
+    - `-x509` : Directly outputs a self-signed certificate instead of a CSR. The -x509 option is required for creating self-signed certificates.
+    - `-sha256` : Uses the SHA-256 hashing algorithm for signing the certificate.
     - `-days 365` : The certificate is valid for 365 days.
-    -  `-out` : the certificate is saved at this location.
+    - `-out` : the certificate is saved at this location.
     - `-keyout` : The private key is saved at this location.
     - `-subj` : Define the certificate subject, including country(C), state(ST), location(L),     organization(O), and common name(CN) for the domain.
 ### COPY ./conf/nginx.conf /etc/nginx/sites-enabled/default :
@@ -179,8 +157,8 @@ server {
 ### server {...} :
 - This defines a server block, wich handles a specific set of requests for the server. Everything inside the curly braces {...} configures how NGINX should handle these requests.
 ### listen 443 ssl :
-- **listen 443** : Instructs NGINX to listen on port 443, wich is the default port for HTTPS.
-- **ssl** : Indicates that SSL/TLS should be used for secure connections on this port.
+- **listen 443** : Configures the server to listen for HTTPS traffic on port 443.
+- **ssl** : The ssl directive enables SSL/TLS for this server block.
 ### server_name :
 - Defines the domain names this server block will respond to. here  it will handle requesrs for ataouaf.42.fr and localhost and wwww.ataouaf.42.fr.
 ### root :
@@ -197,6 +175,32 @@ Specifies the path to the private key that corresponds to the SSL certificaate. 
 - **location ~ \.php$** : this block matches any request for php files. The ~ indicates a regular expression is being used. This expression matches any file ending in .php.
 ### fastcgi_pass wordpress:9000 :
 - **fastcgi_pass** : Defines where to pass PHP requests. Here, it forwards PHP requests to port 9000 on the container named wordpress, where php-fpm(FastCGI Process Manager) is running.
+
+# **FastCGI**:
+
+- FastCGI is a protocol that allows a web server (like Nginx or Apache) to communicate with applications that process web requests
+- It's an improvement over the older CGI (Common Gateway Interface) protocol
+- Instead of creating a new process for each request (like CGI did), FastCGI keeps processes running and reuses them for multiple requests
+- This makes handling web requests much faster and more efficient
+
+# **PHP-FPM (PHP FastCGI Process Manager)** :
+
+- PHP-FPM is a specific implementation of FastCGI for PHP
+- It's a process manager that handles PHP requests
+## Key features:
+- Manages pools of PHP worker processes
+- Can handle different PHP versions simultaneously
+- Provides better performance than traditional PHP handling
+- Offers advanced features like process monitoring and adaptive process spawning
+
+# The relationship between them:
+When a web request comes in for a PHP file:
+
+The web server (e.g., Nginx) receives the request
+It passes the request to PHP-FPM using the FastCGI protocol
+PHP-FPM processes the PHP code
+The result is sent back through FastCGI to the web server
+Finally, the web server sends the response to the user
 
 # Mariadb :
 NariaDb is an open-source database management system that originated as a fork of MYSQL. It is designed to store, manage, and retrieve data efficiently and supports SQL(Structured Query Language) for database operations.
