@@ -127,6 +127,7 @@ COPY ./conf/nginx.conf /etc/nginx/sites-enabled/default
     - `-x509` : Directly outputs a self-signed certificate instead of a CSR. The -x509 option is required for creating self-signed certificates.
     - `-sha256` : Uses the SHA-256 hashing algorithm for signing the certificate.
     - `-days 365` : The certificate is valid for 365 days.
+    - `-nodes` : No passphrase for the private key.
     - `-out` : the certificate is saved at this location.
     - `-keyout` : The private key is saved at this location.
     - `-subj` : Define the certificate subject, including country(C), state(ST), location(L),     organization(O), and common name(CN) for the domain.
